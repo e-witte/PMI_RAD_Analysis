@@ -1,0 +1,44 @@
+---
+title: "PCAdapt_PMI.qmd"
+format: html
+editor: visual
+---
+
+####################### 
+
+PCADAPT \######################
+
+```{r}
+rm(list = ls()) #clear environment
+
+install.packages("pcadapt")
+
+install.packages("vcfR")
+
+library(pcadapt)
+
+library(vcfR)
+
+setwd("~/Desktop/pteroinae_git/")
+
+path_to_file <- "/Users/ericwitte/Desktop/pteroinae_git/PMI_pop_10_10_ref_genome/populations.snps.vcf"
+
+PMI_loci <- read.pcadapt(path_to_file, type = "vcf")
+
+```
+
+```{r}
+x <- pcadapt(input = PMI_loci, K = 6)
+
+plot(x, option = "screeplot")
+
+plot(x, option = "screeplot", K = 6)
+
+poplist.names <- c(rep("RED",10),rep("MED",56))
+
+plot(x, option = "scores", pop = poplist.names)
+
+#Bonferroni correction padj <- p.adjust(x$pvalues,method="bonferroni") alpha <- 0.05 outliers_PMI_66 <- which(padj < alpha) length(outliers_PMI_66) outliers_PMI_66
+
+
+```
