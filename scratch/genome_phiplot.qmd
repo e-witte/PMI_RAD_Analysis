@@ -1,0 +1,60 @@
+library(ggplot2)
+library(tidyverse)
+
+
+#load data
+phi_st <- read.csv("data/21324_populations.phistats.tsv", header = TRUE, sep = "\t", skip =3)
+view(phi_st)
+
+scaffs<- unique(phi_st$Chr)
+scaffs
+length(scaffs)
+
+chrom_num<-phi_st %>% 
+  group_by(Chr) %>% 
+  summarize(max(BP))
+  
+chrom_num <- chrom_num %>% arrange(desc(`max(BP)`))
+
+idx<- match(chrom_num$Chr, phi_st$Chr) #index that locates chrom start in phist
+re_idx <- sort(idx) #variable breaks
+
+ranges <- data.frame(Chr = 1:length(idx), beginning = NA, ending = NA)
+
+for(i in 1:length(idx)){
+  beg<- idx[i]
+  end_idx <- match(beg, re_idx) +1
+  end <- re_idx[end_idx]-1
+  ranges[i,2] <- beg
+  ranges[i,3] <- end
+  if(is.na(end)) ranges[i,3]<- nrow(phi_st)
+  print(ranges[i,])
+}
+
+re_phi_st <- phi_st
+colnames(re_phi_st) <- c(colnames(phi_st)[1:12], "lin", "sel", "scaff")
+
+view(re_phi_st)
+
+l <- 1
+int <- 0
+m <- 0
+spacer <- 100000
+
+for(j in 1:nrow(ranges)){
+  for(k in ranges$beginning[j]:ranges$ending[j]){
+    re_phi_st[l,] <- phi_st[k,]
+    re_phi_st[l,15]<- j
+    if(l>1) int <- int + (re_phi_st[l,3]-re_phi_st[l-1, 3])
+    if(int<=0) int<-0
+    #if(l>1 & re_phi_st[l,15]!=re_phi_st[l-1,15]) int<-int+spacer
+    m <- m + int
+    re_phi_st[l,13]<- m
+  l <- l+1
+  }
+}
+
+plot<- ggplot(re_phi_st, aes(x = lin, y = phi_st)) +
+  geom_point()
+
+

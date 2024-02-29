@@ -19,11 +19,14 @@ library(pcadapt)
 
 library(vcfR)
 
-setwd("~/Desktop/pteroinae_git/")
+#path_to_file<- ("data/21324_populations.snps.vcf")
 
-path_to_file <- "/Users/ericwitte/Desktop/pteroinae_git/PMI_pop_10_10_ref_genome/populations.snps.vcf"
+setwd("data")
 
-PMI_loci <- read.pcadapt(path_to_file, type = "vcf")
+PMI_loci<- read.pcadapt ("21324_populations.snps.vcf", type = "vcf")
+
+#PMI_loci <- read.pcadapt(input = path_to_file, type = "vcf")
+
 
 ```
 
@@ -38,7 +41,14 @@ poplist.names <- c(rep("RED",10),rep("MED",56))
 
 plot(x, option = "scores", pop = poplist.names)
 
-#Bonferroni correction padj <- p.adjust(x$pvalues,method="bonferroni") alpha <- 0.05 outliers_PMI_66 <- which(padj < alpha) length(outliers_PMI_66) outliers_PMI_66
+#Bonferroni correction 
+padj <- p.adjust(x$pvalues,method="bonferroni") 
+alpha <- 0.05 
+outliers_PMI_66 <- which(padj < alpha) 
+length(outliers_PMI_66) 
+outliers_PMI_66
+
+
 
 
 ```

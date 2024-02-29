@@ -1,1 +1,0 @@
-The UNIX directory contains SLURM files to run in BASH.

@@ -1,0 +1,16 @@
+library(ggplot2)
+
+dat_299_phist <- read.csv(file = "data/phi_stat_scaff_299_21324.tsv", sep = "\t", header = FALSE)
+
+colnames(dat_299_phist) <- c("locus", "phist")
+
+thresh <- 0.488312458 #set thresh if desired
+
+reg_start <- 20118000 #range of interest region
+reg_end <- 20140000
+
+phi_plot <- ggplot(data = dat_299_phist, aes(x = locus, y = phist)) +
+  geom_point() +
+  geom_hline(yintercept = thresh, lty =2) +
+  geom_rect(inherit.aes = FALSE, aes(xmin =reg_start, xmax = reg_end, ymin = min(phist), ymax =max(phist)), color = "transparent", fill = "red")
+
